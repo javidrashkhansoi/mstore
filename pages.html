@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Страницы</title><link rel="shortcut icon" href="data:,"><style>:root {
+      --primary-color: 34, 77, 144;
+      --secondary-color: 255, 255, 255;
+      --hover-color: 255, 165, 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      outline: 0;
+    }
+
+    html {
+      block-size: 100%;
+      inline-size: 100%;
+    }
+
+    body {
+      block-size: 100%;
+      inline-size: 100%;
+      font-family: sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: rgb(var(--primary-color));
+      background-color: rgba(var(--primary-color), 0.1);
+    }
+
+    body>div {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      flex-direction: column;
+      min-block-size: 100%;
+      padding: 15px;
+      overflow: hidden;
+      perspective: 1000px;
+    }
+
+    body>div>svg,
+    body>div>img {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      inline-size: 100%;
+      block-size: 100%;
+      filter: blur(5px);
+    }
+
+    body>div>div {
+      inline-size: 100%;
+      max-inline-size: fit-content;
+      margin: auto;
+      padding: 15px;
+      background-color: rgba(var(--secondary-color), 0.75);
+      border: 1px solid;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    svg,
+    img {
+      display: block;
+      max-inline-size: 100%;
+      margin-inline: auto;
+    }
+
+    h1 {
+      margin-block: 20px;
+      text-align: center;
+    }
+
+    ul {
+      list-style: none;
+      border-inline-start: 1px solid;
+      transition: border-color 0.3s;
+    }
+
+    ul:focus-within {
+      border-color: rgb(var(--hover-color));
+    }
+
+    ul ul {
+      margin-inline-start: 15px;
+    }
+
+    li:not(:last-child) {
+      margin-block-end: 10px;
+    }
+
+    li a {
+      display: block;
+      max-inline-size: fit-content;
+      text-decoration: none;
+      text-overflow: ellipsis;
+      color: inherit;
+      transition: color 0.3s;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    li a:before {
+      content: "- ";
+    }
+
+    li a:focus-visible {
+      color: rgb(var(--hover-color));
+    }
+
+    li>div:not(:first-child) {
+      margin-block-start: 5px;
+    }
+
+    li>ul {
+      margin-block-start: 10px;
+    }
+
+    @media (any-hover: hover) {
+      ul:hover {
+        border-color: rgb(var(--hover-color));
+      }
+
+      li a:hover {
+        color: rgb(var(--hover-color));
+      }
+    }</style></head><body><div><div><h1>Страницы</h1><ul><li><a href="index.html" target="_blank" title="Главная">Главная</a></li><li><a href="catalog.html" target="_blank" title="Каталог товаров">Каталог товаров</a></li><li><a href="product.html" target="_blank" title="База Grattol Royal">База Grattol Royal</a></li><li><a href="cart.html" target="_blank" title="Корзина">Корзина</a></li><li><a href="sale.html" target="_blank" title="Распродажа">Распродажа</a></li><li><a href="placing.html" target="_blank" title="Оформление заказа">Оформление заказа</a></li><li><a href="shipping.html" target="_blank" title="Доставка и оплата">Доставка и оплата</a></li><li><a href="contacts.html" target="_blank" title="Контакты">Контакты</a></li></ul></div></div></body></html>
