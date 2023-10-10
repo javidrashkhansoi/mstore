@@ -1232,7 +1232,7 @@ const headerMainNavWrapper = document.querySelector(".header-nav__wrapper--main"
 if (headerContacts && headerMainNavWrapper) {
   const move = new Move({
     destinationSelector: ".header-nav__wrapper--main",
-    targetSelector: ".header-contacts",
+    targetSelector: ".header-contacts:not(.filter-form__contacts)",
     breakpoint: 992,
   });
 }
@@ -1244,7 +1244,81 @@ var spoilers = __webpack_require__(635);
 
 const spoilers_spoilers = new spoilers/* Spoilers */.r();
 
+;// CONCATENATED MODULE: ./src/js/scripts/scripts/filter-form.js
+/** @type {HTMLFormElement} */
+const filterForm = document.querySelector(".filter-form");
+
+if (filterForm) {
+  /** @type {NodeListOf<HTMLInputElement>} */
+  const catalogRadios = filterForm.querySelectorAll("[data-catalog]");
+  /** @type {NodeListOf<HTMLFieldSetElement>} */
+  const catalogFieldsets = filterForm.querySelectorAll("[data-catalog-inner]");
+  /** @type {NodeListOf<HTMLDivElement>} */
+  const hasSubcategoriesItems = filterForm.querySelectorAll("[data-has-subcategories]");
+  /** @type {HTMLButtonElement} */
+  const filterButton = document.querySelector(".filter-button");
+
+  if (catalogRadios.length && catalogFieldsets.length) {
+    catalogRadios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        const checkedRadioDataValue = getCheckedRadioDataValue();
+
+        catalogFieldsets.forEach(fieldset => {
+          const { dataset } = fieldset;
+          const { catalogInner } = dataset;
+
+          fieldset.toggleAttribute("disabled", catalogInner !== checkedRadioDataValue);
+        });
+      });
+    });
+
+    function getCheckedRadioDataValue() {
+      /** @type {[HTMLInputElement]} */
+      const [checkedRadio] = [...catalogRadios].filter(/**@param {HTMLInputElement} radio */ radio => !!radio.checked);
+      const { dataset } = checkedRadio;
+      const { catalog } = dataset;
+
+      return catalog;
+    }
+  }
+
+  if (hasSubcategoriesItems.length) {
+    hasSubcategoriesItems.forEach(item => {
+      /** @type {[HTMLInputElement]} */
+      const [input] = [...item.children].filter(/** @param {Element} child */ child => child.nodeName === "INPUT");
+      /** @type {HTMLFieldSetElement} */
+      const subcategory = item.querySelector("[data-subcategory]");
+
+      if (input && subcategory) {
+        input.addEventListener("change", () => {
+          subcategory.toggleAttribute("disabled", !input.checked);
+        });
+      }
+    });
+  }
+
+  filterButton?.addEventListener("click", () => {
+    filterForm.classList.toggle("show");
+  });
+
+  document.addEventListener("click", event => {
+    /** @type {{target: HTMLElement}} */
+    const { target } = event;
+
+    if (!target.closest(".filter-form") && !target.closest(".filter-button") || target.closest(".filter-form__close")) {
+      filterForm.classList.remove("show");
+    }
+  });
+
+  document.addEventListener("keydown", event => {
+    const { code } = event;
+
+    if (code === "Escape") filterForm.classList.remove("show");
+  });
+}
+
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts.js
+
 
 
 
