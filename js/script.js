@@ -7876,7 +7876,8 @@ counters?.forEach(counter => {
   /** @type {HTMLButtonElement} */
   const plus = counter.querySelector(".counter__button--plus");
   const input = counter.querySelector("input");
-  const output = counter.querySelector("output");
+  /** @type {HTMLSpanElement} */
+  const output = counter.querySelector(".counter__output");
 
   if (minus && plus && input && output) {
     [minus, plus].forEach(button => {
@@ -8165,6 +8166,18 @@ if (headerContacts && headerMainNavWrapper) {
   });
 }
 
+const placing = document.querySelector(".placing");
+const placingBreadcrumbs = placing?.querySelector(".placing__breadcrumbs");
+
+if (placingBreadcrumbs) {
+  const move = new Move({
+    destinationSelector: ".placing",
+    targetSelector: ".placing__breadcrumbs",
+    breakpoint: 768,
+    index: "first",
+  });
+}
+
 // EXTERNAL MODULE: ./src/js/modules/spoilers.js
 var spoilers = __webpack_require__(635);
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts/spoilers.js
@@ -8253,7 +8266,7 @@ const radiosButton = radiosBlock?.querySelector(".radio-button");
 /** @type {HTMLDivElement} */
 const descriptionBlock = document.querySelector(".product-description");
 /** @type {HTMLButtonElement} */
-const descriptionButton = descriptionBlock.querySelector(".product-description__button");
+const descriptionButton = descriptionBlock?.querySelector(".product-description__button");
 
 if (radiosButton) {
   /** @type {HTMLDivElement} */
@@ -8310,7 +8323,74 @@ descriptionButton?.addEventListener("click", () => {
   descriptionButton.remove();
 });
 
+;// CONCATENATED MODULE: ./src/js/scripts/scripts/placing-form.js
+/** @type {HTMLFormElement} */
+const placing_form_form = document.querySelector(".placing-form");
+/** @type {NodeListOf<HTMLFieldSetElement>} */
+const controlBlocks = placing_form_form?.querySelectorAll("[data-has-control]");
+/** @type {NodeListOf<HTMLFieldSetElement>} */
+const selectControlleds = placing_form_form?.querySelectorAll("[data-select-controlled]");
+
+controlBlocks?.forEach(controlBlock => {
+  const { children } = controlBlock;
+  /** @type {HTMLFieldSetElement[]} */
+  const controlleds = [...children].filter(/** @param {HTMLElement} child*/ child => {
+    return child.hasAttribute("data-controlled");
+  });
+  /** @type {[HTMLInputElement | HTMLSelectElement]} */
+  const [controls] = [...children].map(/** @param {HTMLElement} child*/ child => {
+    if (!child.hasAttribute("data-controlled")) {
+      return child.querySelectorAll("[data-control]");
+    }
+  }).filter(controls => controls?.length);
+
+  controls?.forEach(/** @param {HTMLInputElement | HTMLSelectElement} control*/ control => {
+    control.addEventListener("change", () => {
+      const { dataset } = control;
+      const { control: data } = dataset;
+
+      if (control instanceof HTMLSelectElement) {
+        const { value } = control;
+
+        controlleds?.forEach(controlled => {
+          controlled.toggleAttribute("disabled", value !== controlled.dataset.controlled);
+        });
+
+        selectControlleds?.forEach(selectControlled => {
+          selectControlled.toggleAttribute("disabled", data !== value && value !== selectControlled.dataset.selectControlled);
+        });
+      } else {
+        const { checked } = control;
+
+        if (checked) {
+          controlleds?.forEach(controlled => {
+            const select = controlled.querySelector("select");
+
+            controlled.toggleAttribute("disabled", data !== controlled.dataset.controlled);
+
+            if (select) {
+              const { dataset, value } = select;
+              const { control } = dataset;
+
+              if (controlled.hasAttribute("disabled")) {
+                selectControlleds?.forEach(selectControlled => {
+                  selectControlled.toggleAttribute("disabled", control !== selectControlled.dataset.selectControlled);
+                });
+              } else {
+                selectControlleds?.forEach(selectControlled => {
+                  selectControlled.toggleAttribute("disabled", data !== value && value !== selectControlled.dataset.selectControlled);
+                });
+              }
+            }
+          });
+        }
+      }
+    });
+  });
+});
+
 ;// CONCATENATED MODULE: ./src/js/scripts/scripts.js
+
 
 
 
@@ -10696,7 +10776,23 @@ if (category_sort_select) {
   });
 }
 
+;// CONCATENATED MODULE: ./src/js/libraries/choices/selects/placing-selects.js
+
+
+/** @type {NodeListOf<HTMLSelectElement>} */
+const selects = document.querySelectorAll(".placing-form__select select");
+
+selects?.forEach(select => {
+  const choices = new scripts_choices(select, {
+    allowHTML: false,
+    searchEnabled: false,
+    position: "bottom",
+    itemSelectText: "",
+  });
+});
+
 ;// CONCATENATED MODULE: ./src/js/libraries/choices/choices.js
+
 
 
 ;// CONCATENATED MODULE: ./src/js/libraries/libraries.js
