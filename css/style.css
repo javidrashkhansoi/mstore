@@ -1041,6 +1041,7 @@ dialog[open] {
 }
 
 .product-card__form {
+  --counter-border: rgba(130, 130, 130, 0.7);
   flex: 0 0 auto;
 }
 
@@ -2242,6 +2243,7 @@ input:focus ~ .fieldset-numbers__value {
 .catalog-products__header {
   display: flex;
   justify-content: space-between;
+  row-gap: 10px;
   -webkit-column-gap: 20px;
   -moz-column-gap: 20px;
   column-gap: 20px;
@@ -2337,10 +2339,12 @@ input:focus ~ .fieldset-numbers__value {
 
 .filter-button {
   display: flex;
+  justify-content: center;
   align-items: center;
   -webkit-column-gap: 5px;
   -moz-column-gap: 5px;
   column-gap: 5px;
+  flex: 1 1 auto;
   min-block-size: 34px;
   padding-block: 5px;
   padding-inline: 12px 33px;
@@ -2583,7 +2587,6 @@ input:checked ~ .product-radios__text {
 }
 
 .cart-form__button {
-  --button-wmax: 346px;
   --button-pi: 40px;
   margin-inline: auto;
   --button-hmin: 45px;
@@ -2901,9 +2904,9 @@ input:checked ~ .product-radios__text {
 }
 
 .placing-form__select .choices__list--dropdown {
+  word-break: unset;
   border: none;
   border-radius: 4px;
-  word-break: unset;
 }
 
 .placing-form__select .choices__list--dropdown .choices__placeholder {
@@ -2918,6 +2921,7 @@ input:checked ~ .product-radios__text {
   padding-inline: 15px !important;
   font-size: inherit;
   background: none;
+  border: 1px solid rgba(130, 130, 130, 0.7);
 }
 
 .placing-form__select .choices__item--choice::after {
@@ -3270,13 +3274,11 @@ input:checked ~ .placing-radio__label .placing-radio__icon::after {
 
 .address__map {
   aspect-ratio: 1/1;
-  -webkit-margin-after: 40px;
-  margin-block-end: 40px;
 }
 
 .address__block {
-  position: relative;
-  z-index: 1;
+  -webkit-margin-after: 40px;
+  margin-block-end: 40px;
 }
 
 .address__inner {
@@ -3742,6 +3744,10 @@ input:not(:checked) ~ .dialog-checkbox__label .dialog-checkbox__icon svg {
     inline-size: fit-content;
     -webkit-margin-start: auto;
     margin-inline-start: auto;
+  }
+
+  .cart-form__button {
+    --button-wmax: 346px;
   }
 
   .sum__label {
@@ -4753,7 +4759,6 @@ input:not(:checked) ~ .dialog-checkbox__label .dialog-checkbox__icon svg {
 
   .catalog-sort .choices {
     flex: 1 1 auto;
-    max-inline-size: 193px;
   }
 
   .catalog-sort .choices__list--single .choices__item {
@@ -4985,6 +4990,12 @@ input:not(:checked) ~ .dialog-checkbox__label .dialog-checkbox__icon svg {
   .header-nav__back svg {
     inline-size: 20px;
     block-size: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .catalog-products__header {
+    flex-wrap: wrap;
   }
 }
 
