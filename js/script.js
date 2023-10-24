@@ -7822,7 +7822,7 @@ const burger = new Burger({
   breakpoint: 992,
   a11y: {
     moveMenu: true,
-    inertElementsSelectors: "[data-wrapper] > *:not([data-burger=\"menu\"], dialog)",
+    inertElementsSelectors: "[data-wrapper] > *:not(.header-catalog, .header-tabbar, [data-burger=\"menu\"], dialog)",
   }
 });
 
@@ -7952,144 +7952,6 @@ if (searchButton) {
   });
 }
 
-;// CONCATENATED MODULE: ./src/js/scripts/scripts/nav.js
-const MAX_WIDTH_992PX = matchMedia("(max-width: 992px)");
-
-/** @type {HTMLDivElement} */
-const headerNav = document.querySelector(".header-nav");
-
-if (headerNav) {
-  /** @type {HTMLButtonElement} */
-  const burgerOpenButton = document.querySelector(".burger-open-button");
-  const { documentElement } = document;
-
-  const navBlockResizeObserver = new ResizeObserver(entries => {
-    entries.forEach(entry => {
-      const { target, borderBoxSize } = entry;
-
-      headerNav.style.removeProperty("--block-height");
-
-      const navBlockHeight = target.scrollHeight;
-
-      headerNav.style.setProperty("--block-height", `${navBlockHeight}px`);
-      // }
-    });
-  });
-
-  headerNav.addEventListener("click", event => {
-    /** @type {{target: HTMLElement}} */
-    const { target } = event;
-
-    if (target.closest(".header-nav__link")) {
-      /** @type {HTMLButtonElement} */
-      const navLink = target.closest(".header-nav__link");
-      /** @type {HTMLLIElement} */
-      const navItem = target.closest(".header-nav__item");
-      /** @type {HTMLDivElement} */
-      const navWrapper = navItem?.querySelector(".header-nav__wrapper");
-
-      navWrapper?.classList[
-        navLink.classList.contains("category-button") ? "toggle" : "add"
-      ]("active");
-
-      const navBlock = navWrapper?.querySelector(".header-nav__block");
-
-      if (navBlock) {
-        navBlockResizeObserver.disconnect();
-        navBlockResizeObserver.observe(navBlock);
-      } else if (target.closest(".header-nav__wrapper--catalog-inner")) {
-        const navBlock = target.closest(".header-nav__wrapper--catalog-inner");
-
-        setTimeout(() => {
-          navBlockResizeObserver.disconnect();
-          navBlockResizeObserver.observe(navBlock);
-        }, 300);
-      }
-    }
-
-    if (target.closest(".header-nav__back")) {
-      /** @type {HTMLDivElement} */
-      const navWrapper = target.closest(".header-nav__wrapper");
-
-      navWrapper?.classList.remove("active");
-
-      const activeNavWrapper = headerNav.querySelector(".header-nav__wrapper.active");
-      const navBlock = activeNavWrapper?.querySelector(".header-nav__block");
-
-      if (navBlock) {
-        navBlockResizeObserver.disconnect();
-        navBlockResizeObserver.observe(navBlock);
-      } else {
-        navBlockResizeObserver.disconnect();
-        headerNav.style.removeProperty("--block-height");
-      }
-    }
-
-    if (target.closest(`.burger-close-button:not([data-burger="close"])`)) {
-      const { matches } = MAX_WIDTH_992PX;
-
-      if (!matches) {
-        hideAllNavWrappers();
-      } else {
-        /** @type {HTMLButtonElement} */
-        const burgerCloseButton = headerNav.querySelector(`.burger-close-button[data-burger="close"]`);
-
-        burgerCloseButton?.click();
-      }
-    }
-  });
-
-  burgerOpenButton?.addEventListener("click", () => {
-    const { matches } = MAX_WIDTH_992PX;
-
-    if (!matches) documentElement.classList.toggle("nav-show");
-  });
-
-  MAX_WIDTH_992PX.addEventListener("change", event => {
-    const { matches } = event;
-
-    if (matches) hideAllNavWrappers();
-  });
-
-  document.addEventListener("click", event => {
-    /** @type {{target: HTMLElement}} */
-    const { target } = event;
-    const { matches } = MAX_WIDTH_992PX;
-
-    if (
-      !target.closest(".header-nav__wrapper--catalog") &&
-      !target.closest(".category-button")
-      && !matches
-    ) hideAllNavWrappers();
-
-    if (!target.closest(".header-nav") && !target.closest(".burger-open-button")) {
-      documentElement.classList.remove("nav-show");
-    }
-  });
-
-  document.addEventListener("keydown", event => {
-    const { code } = event;
-    const { matches } = MAX_WIDTH_992PX;
-
-    if (code === "Escape" && !matches) {
-      if (!matches) hideAllNavWrappers();
-
-      documentElement.classList.remove("nav-show");
-    }
-  });
-
-  function hideAllNavWrappers() {
-    const activeWrappers = headerNav.querySelectorAll(".header-nav__wrapper.active");
-
-    activeWrappers?.forEach(wrapper => {
-      wrapper.classList.remove("active");
-    });
-
-    navBlockResizeObserver.disconnect();
-    headerNav.style.removeProperty("--block-height");
-  }
-}
-
 ;// CONCATENATED MODULE: ./src/js/modules/move.js
 class Move {
   #$destination;
@@ -8152,19 +8014,124 @@ class Move {
 
 
 
-;// CONCATENATED MODULE: ./src/js/scripts/scripts/move.js
+;// CONCATENATED MODULE: ./src/js/scripts/scripts/catalog.js
 
 
-const headerContacts = document.querySelector(".header-contacts");
-const headerMainNavWrapper = document.querySelector(".header-nav__wrapper--main");
 
-if (headerContacts && headerMainNavWrapper) {
-  const move = new Move({
-    destinationSelector: ".header-nav__wrapper--main",
-    targetSelector: ".header-contacts:not(.filter-form__contacts)",
-    breakpoint: 992,
+const catalog_selectors = {
+  back: ".header-catalog__back",
+  buttons: "[data-catalog]",
+  catalog: ".header-catalog",
+  closeButton: ".header-catalog__close",
+  link: ".catalog-link",
+  sublist: ".header-catalog__sublist",
+  tabbar: ".header-tabbar",
+  wrapper: ".wrapper",
+}
+
+const classes = {
+  catalog: "show",
+  buttons: "active",
+}
+
+/** @type {NodeListOf<HTMLButtonElement} */
+const catalogButtons = document.querySelectorAll(catalog_selectors.buttons);
+
+/** @type {HTMLDivElement} */
+const catalog = document.querySelector(catalog_selectors.catalog);
+
+if (catalogButtons.length && catalog) {
+  const wrapper = document.querySelector(catalog_selectors.wrapper);
+
+  if (wrapper) {
+    const move = new Move({
+      destinationSelector: catalog_selectors.wrapper,
+      targetSelector: catalog_selectors.catalog,
+      breakpoint: 0,
+      breakpointType: "min",
+      index: 1,
+    });
+
+    /** @type {HTMLUListElement} */
+    const tabbar = document.querySelector(catalog_selectors.tabbar);
+
+    if (tabbar) {
+      const move = new Move({
+        destinationSelector: catalog_selectors.wrapper,
+        targetSelector: catalog_selectors.tabbar,
+        breakpoint: 0,
+        breakpointType: "min",
+        index: 2,
+      });
+
+      const tabbarResizeObserver = new ResizeObserver(entries => {
+        entries.forEach(entry => {
+          const { borderBoxSize } = entry;
+          const { blockSize } = borderBoxSize[0];
+
+          document.documentElement.style.setProperty("--tabbar-height", `${blockSize}px`);
+        });
+      });
+
+      tabbarResizeObserver.observe(tabbar);
+    }
+  }
+
+  /** @param {"add" | "remove" | "toggle"} action */
+  const catalogAction = (action) => {
+    catalog.classList[action](classes.catalog);
+
+    const isShow = catalog.classList.contains(classes.catalog);
+
+    catalogButtons.forEach(catalogButton => {
+      catalogButton.classList.toggle(classes.buttons, isShow);
+    });
+  };
+
+  catalogButtons.forEach(catalogButton => {
+    catalogButton.addEventListener("click", () => {
+      catalogAction("toggle");
+    });
+  });
+
+  catalog.addEventListener("click", event => {
+    /** @type {{target: Element}} */
+    const { target } = event;
+
+    if (target.closest(catalog_selectors.closeButton)) catalogAction("remove");
+
+    if (target.closest(catalog_selectors.link)) {
+      /** @type {HTMLLIElement} */
+      const catalogItem = target.closest(catalog_selectors.link).parentElement;
+      /** @type {[HTMLDivElement]} */
+      const [sublist] = [...catalogItem.children].filter(/** @param {Element} child */ child => child.classList.contains(catalog_selectors.sublist.substring(1)));
+
+      if (sublist) sublist.classList.add(classes.catalog);
+    }
+
+    if (target.closest(catalog_selectors.back)) {
+      const sublist = target.closest(catalog_selectors.sublist);
+
+      if (sublist) sublist.classList.remove(classes.catalog);
+    }
+  });
+
+  document.addEventListener("click", event => {
+    /** @type {{target: Element}} */
+    const { target } = event;
+
+    if (!target.closest(catalog_selectors.catalog) && !target.closest(catalog_selectors.buttons)) catalogAction("remove");
+  });
+
+  document.addEventListener("keydown", event => {
+    const { code } = event;
+
+    if (code === "Escape") catalogAction("remove");
   });
 }
+
+;// CONCATENATED MODULE: ./src/js/scripts/scripts/move.js
+
 
 const placing = document.querySelector(".placing");
 const placingBreadcrumbs = placing?.querySelector(".placing__breadcrumbs");
